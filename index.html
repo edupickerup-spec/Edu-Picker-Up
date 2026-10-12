@@ -1,107 +1,30 @@
-<div class="card">
-        <h2 class="card-title">📋 Tus Últimos Pedidos</h2>
-        <div class="history-list" id="listaHistorial">
-            <!-- Los pedidos aparecerán aquí -->
+<div class="container">
+    <!-- Dashboard Principal -->
+    <div class="dashboard">
+        <div class="card-dash main">
+            <h3>Sueldo Bruto Acumulado</h3>
+            <div class="value" id="valBruto">$0</div>
         </div>
-        <button class="delete-btn" onclick="borrarTodo()">🗑️ Borrar todo y empezar de cero</button>
+        <div class="card-dash">
+            <h3>Líquido (-14.5%)</h3>
+            <div class="value" id="valLiquido" style="color: #424242;">$0</div>
+        </div>
+        <div class="card-dash">
+            <h3>Total Pedidos</h3>
+            <div class="value" id="valPedidos" style="color: #424242;">0</div>
+        </div>
     </div>
-</div>
 
-<script>
-    // Establecer fecha de hoy al entrar
-    document.getElementById('inputFecha').valueAsDate = new Date();
-    
-    // Cargar datos guardados en el celular
-    let pedidos = JSON.parse(localStorage.getItem('jumboAppDB2')) || [];
-    actualizarUI();
-
-    // Fórmula Matemática EXACTA de la tabla de Jumbo (Escalonada)
-    function calcularPago(sku) {
-        if (sku <= 0) return 0;
-        if (sku <= 10) return 1000 + (sku * 120);
-        if (sku <= 20) return 2200 + ((sku - 10) * 70);
-        if (sku <= 30) return 2900 + ((sku - 20) * 60);
-        if (sku <= 40) return 3500 + ((sku - 30) * 55);
-        if (sku <= 50) return 4050 + ((sku - 40) * 50);
-        if (sku >= 51) return 4710 + ((sku - 50) * 40); 
-        return 0;
-    }
-
-    function guardarPedido() {
-        const fecha = document.getElementById('inputFecha').value;
-        const sku = parseInt(document.getElementById('inputSku').value);
-
-        if (!fecha || isNaN(sku) || sku <= 0) {
-            alert("Por favor, ingresa una cantidad válida de SKU.");
-            return;
-        }
-
-        const pago = calcularPago(sku);
+    <!-- Ingreso de Datos -->
+    <div class="card">
+        <h2 class="card-title">➕ Ingresar Nuevo Pedido</h2>
+        <label>Fecha</label>
+        <input type="date" id="inputFecha">
         
-        // Arreglar la fecha para que se lea en formato de Chile (DD-MM)
-        const partes = fecha.split('-');
-        const fechaLista =er { padding: 0 15px; max-wid
-
-        // Crear el registro único
-        pedidos.push({ id: Date.now(), fecha: fechaLista, sku: sku, pago: pago });
+        <label>Cantidad de SKU</label>
+        <input type="number" id="inputSku" placeholder="Escribe aquí los SKU..." pattern="[0-9]*" inputmode="numeric">
         
-        // Guardar en la memoria del teléfono
-        localStorage.setItem('jumboAppDB2', JSON.stringify(pedidos));
-        
-        // Limpiar el campo de SKU y actualizar pantalla
-        document.getElementById('inputSku').value = '';
-        actualizarUI();
-    }
+        <button class="add-btn" onclick="guardarPedido()">Guardar Monto</button>
+    </div>
 
-    function eliminarUnPedido(id) {
-        if(confirm("¿Seguro que quieres borrar este pedido específico?")) {
-            pedidos = pedidos.filter(p => p.id !== id);
-            localStorage.setItem('jumboAppDB2', JSON.stringify(pedidos));
-            actualizarUI();
-        }
-    }
-
-    function borrarTodo() {
-        if(confirm("⚠️ ¿Estás seguro? Esto borrará TODO tu progreso y el monto volverá a $0.")) {
-            pedidos = [];
-            localStorage.removeItem('jumboAppDB2');
-            actualizarUI();
-        }
-    }
-
-    function actualizarUI() {
-        let bruto = 0;
-        let html = '';
-        
-        // Invertir para mostrar el pedido más nuevo primero
-        const invertidos = [...pedidos].reverse();
-
-        invertidos.forEach(p => {
-            bruto += p.pago;
-            html += `
-            <div class="history-item">
-                <div class="h-info">
-                    <span class="h-date">📅 ${p.fecha}</span>
-                    <span class="h-sku">📦 ${p.sku} SKU</span>
-                </div>
-                <div style="display:flex; align-items:center;">
-                    <span class="h-price">$${p.pago.toLocaleString('es-CL')}</span>
-                    <button class="borrar-uno" onclick="eliminarUnPedido(${p.id})">✖️</button>
-                </div>
-            </div>`;
-        });
-
-        if(invertidos.length === 0) {
-            html = '<p style="text-align:center; color:#888; font-size:14px; padding: 10px;">Aún no has ingresado pedidos hoy.</p>';
-        }
-
-        // Calcular AFP y Salud
-        const liquido = bruto - (bruto * 0.145);
-
-        // Mostrar los números en los Cuadros Superiores
-        document.getElementById('valBruto').innerText = '$' + bruto.toLocaleString('es-CL');
-        document.getElementById('valLiquido').innerText = '$' + Math.round(liquido).toLocaleString('es-CL');
-        document.getElementById('valPedidos').innerText = pedidos.length;
-        document.getElementById('listaHistorial').innerHTML = html;
-    }
-</script>
+    <!-- Historial de Pedidos -->
