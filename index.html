@@ -1,0 +1,29 @@
+<label for="fecha">Fecha del Pedido:</label>
+<input type="date" id="fecha">
+
+<label for="sku">Cantidad de SKU (Artículos):</label>
+<input type="number" id="sku" placeholder="Ej: 15" pattern="[0-9]*" inputmode="numeric">
+
+<button onclick="agregarPedido()">➕ Agregar Pedido</button>
+
+<div class="totales">
+    <p>Total Bruto: <span id="totalMes" style="color:#2E7D32;">$0</span></p>
+    <p>Líquido Aprox (-14.5%): <span id="totalLiquido">$0</span></p>
+    <p>Total Pedidos Ingresados: <span id="conteoPedidos">0</span></p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>SKU</th>
+            <th>Ganancia</th>
+        </tr>
+    </thead>
+    <tbody id="tablaPedidos">
+        <!-- Los pedidos aparecerán aquí -->
+    </tbody>
+</table>
+
+<button class="btn-borrar" onclick="borrarDatos()">🗑️ Borrar Todo el Historial</button>
+<p class="nota">Los datos se guardan solo en tu teléfono. No necesitas internet para registrar.</p>
